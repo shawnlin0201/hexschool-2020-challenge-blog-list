@@ -1,6 +1,4 @@
 module.exports = {
-  filenameHashing: false,
-  productionSourceMap: false,
   css: {
     loaderOptions: {
       scss: {
