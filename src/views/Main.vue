@@ -2,7 +2,7 @@
   <div class="main-wrapper">
     <nav class="main-navbar-wrapper">
       <div class="navbar-title">
-        Hexschool 2020 鐵人賽文章搜尋器 ver 0.1.0
+        Hexschool 2020 鐵人賽文章搜尋器 ver 0.1.1
       </div>
       <div class="navbar-info">
         目前參賽人數：{{List.length}}
