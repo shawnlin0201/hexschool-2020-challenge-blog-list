@@ -4,18 +4,20 @@
       <div class="navbar-title">
         Hexschool 2020 鐵人賽文章搜尋器 ver 0.1.0
       </div>
+      <div class="navbar-info">
+        目前參賽人數：{{List.length}}
+      </div>
     </nav>
     <div class="main-search-wrapper">
       <span class="search-input-wrapper">
         <input class="search-input" type="text" placeholder="搜尋文章關鍵字" @input="getKeyword($event.target.value)">
       </span>
-      <button class="search-btn" :class="{'is-active': sort === 'ascendDate'}" @click="sortByAscendDate(), sort = 'ascendDate'">依日期遠到近</button>
-      <button class="search-btn" :class="{'is-active': sort === 'descendDate'}" @click="sortByDescendDate(), sort = 'descendDate'">依日期近到遠</button>
+      <button class="search-btn" :class="{'is-active': sort === 'ascendDate'}" @click="sortByAscendDate(), sort = 'ascendDate'">依更新日期遠到近</button>
+      <button class="search-btn" :class="{'is-active': sort === 'descendDate'}" @click="sortByDescendDate(), sort = 'descendDate'">依更新日期近到遠</button>
     </div>
     <div class="main-list-wrapper">
       <template v-for="(data, index) in List">
         <Article
-          v-if="data.blogList[0].title.toLowerCase().indexOf(keyword.toLowerCase()) > -1"
           :key="index"
           :author="data.name"
           :title="data.blogList[0].title"
@@ -98,11 +100,11 @@ export default {
   box-sizing: border-box;
   padding: 12px;
   display:flex;
-  justify-content: flex-start;
+  justify-content: space-between;
   align-items: center;
-  background:white;
-  color:#000000;
-  box-shadow: 0 0 4px 0 #000000;
+  background: #FFF;
+  color:#0F3127;
+  box-shadow: 0 2px 4px 0 #00000090;
   font-weight: bold;
   font-family: '微軟正黑體';
 }
@@ -141,6 +143,7 @@ export default {
   padding: 8px 12px;
   border-radius: 2px;
   transition: 0.5s;
+  background:#fff;
   box-shadow: 0 4px 8px 0 #00000080;
   overflow: hidden;
   &:hover {

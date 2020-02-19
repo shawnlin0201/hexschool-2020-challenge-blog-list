@@ -4,7 +4,7 @@
       <div class="card-header">{{ title }}</div>
       <div class="card-body"></div>
       <div class="card-footer">
-        <span class="info-author">{{ author || '無名' }}</span>
+        <span class="info-author">{{ author || '匿名工程師' }}</span>
         <span class="info-update">{{ updateTime }}</span>
       </div>
     </a>
@@ -36,11 +36,12 @@ export default {
   font-weight: bold;
   font-size:15px;
   transition: 0.3s;
-  box-shadow: 0 4px 8px 0 #00000080;
+  background:white;
+  box-shadow: 0 2px 4px 0 #00000090;
   border-radius: 4px;
   overflow: hidden;
   &:hover {
-    box-shadow: 0 8px 12px 0 #00000080;
+    box-shadow: 0 4px 8px 0 #00000090;
   }
   .card-header {
     padding: 12px;
