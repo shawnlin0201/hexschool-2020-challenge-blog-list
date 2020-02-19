@@ -5,12 +5,18 @@
         Hexschool 2020 鐵人賽文章搜尋器 ver 0.1.1
       </div>
       <div class="navbar-info">
-        目前參賽人數：{{List.length}}
+        <span class="navbar-info-count">
+          目前參賽人數：{{List.length}}。
+        </span>
+        <span class="navbar-info-dataOrigin">
+          {{ ListOrigin }}。
+        </span>
       </div>
     </nav>
     <div class="main-search-wrapper">
       <span class="search-input-wrapper">
-        <input class="search-input" type="text" placeholder="搜尋文章關鍵字" @input="getKeyword($event.target.value)">
+        <input class="search-input" type="text" placeholder="搜尋文章關鍵字" @input="getKeyword($event.target.value), sort = ''">
+        <div class="search-input-autoComplete"></div>
       </span>
       <button class="search-btn"
         :class="{'is-active': sort === 'ascendDate'}"
@@ -51,6 +57,7 @@
 
 <script>
 import Article from '@/components/Article'
+import mockListData from '@/mockAPI/20200218.json'
 
 export default {
   name: 'Main',
@@ -59,7 +66,8 @@ export default {
   },
   data () {
     return {
-      List: [],
+      List: mockListData,
+      ListOrigin: '資料、連線異常，啟用備份模式',
       keyword: '',
       sort: ''
     }
@@ -69,29 +77,31 @@ export default {
   },
   methods: {
     getListData () {
-      if (this.List.length === 0) {
-        fetch('https://raw.githubusercontent.com/hexschool/w3hexschool-API/master/data.json')
-          .then(res => res.json())
-          .then(res => {
-            this.List = res
-            this.List.map(data => {
-              const day = data.updateTime.split(' ')[0]
-              const meridiem = data.updateTime.split(' ')[1]
-              const time = data.updateTime.split(' ')[2]
-              let hour = time.split(':')[0]
-              let minute = time.split(':')[1]
-              let second = time.split(':')[2]
-              if (meridiem === '下午') {
-                hour = (+time.split(':')[0] + 12).toString()
-                if (hour === '24') { hour = '00' }
-                minute = time.split(':')[1].toString()
-                second = time.split(':')[2].toString()
-              }
-              data.timestamp = Date.parse(`${day} ${hour}:${minute}:${second}`)
-            })
-            // console.log('List', this.List)
-          })
-      }
+      fetch('https://raw.githubusercontent.com/hexschool/w3hexschool-API/master/data.json')
+        .then(res => res.json())
+        .then(res => {
+          this.List = res
+          this.formatListData()
+          this.ListOrigin = '資料來源為六角學院'
+        })
+    },
+    formatListData () {
+      console.log('List', this.List)
+      this.List.map(data => {
+        const day = data.updateTime.split(' ')[0]
+        const meridiem = data.updateTime.split(' ')[1]
+        const time = data.updateTime.split(' ')[2]
+        let hour = time.split(':')[0]
+        let minute = time.split(':')[1]
+        let second = time.split(':')[2]
+        if (meridiem === '下午') {
+          hour = (+time.split(':')[0] + 12).toString()
+          if (hour === '24') { hour = '00' }
+          minute = time.split(':')[1].toString()
+          second = time.split(':')[2].toString()
+        }
+        data.timestamp = Date.parse(`${day} ${hour}:${minute}:${second}`)
+      })
     },
     getKeyword (keyword) {
       this.keyword = keyword
