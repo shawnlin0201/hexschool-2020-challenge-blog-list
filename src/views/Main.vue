@@ -12,17 +12,36 @@
       <span class="search-input-wrapper">
         <input class="search-input" type="text" placeholder="搜尋文章關鍵字" @input="getKeyword($event.target.value)">
       </span>
-      <button class="search-btn" :class="{'is-active': sort === 'ascendDate'}" @click="sortByAscendDate(), sort = 'ascendDate'">依更新日期遠到近</button>
-      <button class="search-btn" :class="{'is-active': sort === 'descendDate'}" @click="sortByDescendDate(), sort = 'descendDate'">依更新日期近到遠</button>
+      <button class="search-btn"
+        :class="{'is-active': sort === 'ascendDate'}"
+        @click="sortByAscendDate(), sort = 'ascendDate'">
+        依更新日期遠到近
+      </button>
+      <button
+        class="search-btn"
+        :class="{'is-active': sort === 'descendDate'}"
+        @click="sortByDescendDate(), sort = 'descendDate'">
+        依更新日期近到遠
+      </button>
+      <button class="search-btn"
+        :class="{'is-active': sort === 'ascendArticleCount'}"
+        @click="sortByAscendArticleCount(), sort = 'ascendArticleCount'">
+        依發布文章多到少
+      </button>
+      <button class="search-btn"
+        :class="{'is-active': sort === 'descendArticleCount'}"
+        @click="sortByDescendArticleCount(), sort = 'descendArticleCount'">
+        依發布文章少到多
+      </button>
     </div>
     <div class="main-list-wrapper">
       <template v-for="(data, index) in List">
         <Article
+          v-if="keywordFilter(data)"
+          :filter="keyword"
           :key="index"
           :author="data.name"
-          :title="data.blogList[0].title"
-          :articleUrl="data.blogList[0].url"
-          :blogUrl="data.blogUrl"
+          :blogList="data.blogList"
           :updateTime="data.updateTime"
         />
       </template>
@@ -64,6 +83,7 @@ export default {
               let second = time.split(':')[2]
               if (meridiem === '下午') {
                 hour = (+time.split(':')[0] + 12).toString()
+                if (hour === '24') { hour = '00' }
                 minute = time.split(':')[1].toString()
                 second = time.split(':')[2].toString()
               }
@@ -81,6 +101,19 @@ export default {
     },
     sortByDescendDate () {
       this.List = this.List.sort((a, b) => b.timestamp - a.timestamp)
+    },
+    sortByAscendArticleCount () {
+      this.List = this.List.sort((a, b) => b.blogList.length - a.blogList.length)
+    },
+    sortByDescendArticleCount () {
+      this.List = this.List.sort((a, b) => a.blogList.length - b.blogList.length)
+    },
+    keywordFilter (data) {
+      let flag = false
+      data.blogList.forEach(article => {
+        if (article.title.toLowerCase().indexOf(this.keyword.toLowerCase()) > -1) { flag = true }
+      })
+      return flag
     }
   }
 }

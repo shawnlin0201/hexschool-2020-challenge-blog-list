@@ -1,13 +1,24 @@
 <template>
-  <span class="article-wrapper">
-    <a class="article-card" :href="blogUrl" target="_blank">
-      <div class="card-header">{{ title }}</div>
-      <div class="card-body"></div>
-      <div class="card-footer">
+  <span class="card-wrapper">
+    <div class="card-modal" target="_blank">
+      <div class="card-header">
         <span class="info-author">{{ author || '匿名工程師' }}</span>
         <span class="info-update">{{ updateTime }}</span>
       </div>
-    </a>
+      <div class="card-body">
+        <div class="article-wrapper" v-for="(article, index) in blogList" :key="index">
+          <a class="article-link"
+            v-if="article.title.toLowerCase().indexOf(filter.toLowerCase()) > -1"
+            target="_blank"
+            :href="article.url">
+            <span class="article-title">{{ article.title }}</span>
+          </a>
+        </div>
+      </div>
+      <div class="card-footer">
+
+      </div>
+    </div>
   </span>
 </template>
 
@@ -17,10 +28,9 @@ export default {
   name: 'Article',
   props: [
     'author',
-    'title',
-    'articleUrl',
-    'blogUrl',
-    'updateTime'
+    'filter',
+    'updateTime',
+    'blogList'
   ],
   components: {
   }
@@ -28,10 +38,12 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.article-card {
+.card-modal {
   display:inline-block;
   width:360px;
-  margin:12px 12px;
+  box-sizing: border-box;
+  margin: 12px;
+  padding: 12px;
   font-family: '微軟正黑體';
   font-weight: bold;
   font-size:15px;
@@ -44,15 +56,17 @@ export default {
     box-shadow: 0 4px 8px 0 #00000090;
   }
   .card-header {
-    padding: 12px;
-    color: #212529;
-  }
-  .card-footer {
     display: flex;
-    padding: 12px 12px;
     justify-content:space-between;
+    border-bottom: 1px solid #1f1f1f;
+    margin-bottom: 8px;
+    padding-bottom: 4px;
     transition: 0.3s;
     overflow: hidden;
+  }
+  .card-body {
+  }
+  .card-footer {
   }
   .info-author {
     margin-right: 12px;
@@ -60,6 +74,16 @@ export default {
   }
   .info-update {
     font-size:14px;
+  }
+  .article-link {
+    display: block;
+    background: #f1f1e1;
+    margin-bottom: 8px;
+    padding:4px;
+    transition: 0.3s;
+    &:hover {
+      background: #d8d8c3;
+    }
   }
 }
 </style>
