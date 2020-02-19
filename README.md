@@ -1,24 +1,12 @@
-# hexschool-2020-challenge-blog-list
+# Hexschool 2020 鐵人賽文章搜尋器 ver 0.1.0
+此專案目的在於搜尋 [六角學院 鼠年全馬鐵人挑戰](https://www.hexschool.com/2019/11/14/2019-11-14-w3Hexschool-2020-challenge/) 所參賽之文章，並基於六角學院釋出的 [API](https://github.com/hexschool/w3hexschool-API) 所開發的搜尋器。
 
-## Project setup
-```
-npm install
-```
+線上連結：[Hexschool 2020 鐵人賽文章搜尋器](https://shawnlin0201.github.io/hexschool-2020-challenge-blog-list/)
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+# 目前功能
+- 文章標題關鍵字搜尋（英文字母不分大小）
+- 日期排序（近到遠、遠到近）
+許願功能以及狀況回報請到[這裡](https://github.com/shawnlin0201/hexschool-2020-challenge-blog-list/issues)回覆。
 
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+# Version
+- 0.1.0：網站上線，附簡單關鍵字搜尋、日期排序。
