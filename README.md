@@ -6,8 +6,8 @@
 搜尋器連結：[Hexschool 2020 鐵人賽文章搜尋器](https://shawnlin0201.github.io/hexschool-2020-challenge-blog-list/)
 
 ## 目前功能
-- 文章標題關鍵字搜尋（英文字母不分大小）
-- 日期排序（近到遠、遠到近）
+- 關鍵字：搜尋文章標題（英文字母不分大小）
+- 排序：依日期遠近排序
 
 許願功能以及狀況回報請到[這裡](https://github.com/shawnlin0201/hexschool-2020-challenge-blog-list/issues)回覆。
 
