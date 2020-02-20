@@ -2,7 +2,7 @@
   <div class="main-wrapper">
     <nav class="main-navbar-wrapper">
       <div class="navbar-title">
-        Hexschool 2020 鐵人賽文章搜尋器 ver 0.1.1
+        Hexschool 2020 鐵人賽文章搜尋器 ver 0.1.2
       </div>
       <div class="navbar-info">
         <span class="navbar-info-count">
