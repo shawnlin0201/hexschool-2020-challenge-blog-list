@@ -57,7 +57,7 @@
 
 <script>
 import Article from '@/components/Article'
-import mockListData from '@/mockAPI/20200218.json'
+import mockListData from '@/mockAPI/20200219.json'
 
 export default {
   name: 'Main',
@@ -86,7 +86,6 @@ export default {
         })
     },
     formatListData () {
-      console.log('List', this.List)
       this.List.map(data => {
         const day = data.updateTime.split(' ')[0]
         const meridiem = data.updateTime.split(' ')[1]

@@ -8,10 +8,25 @@
     <title><%= htmlWebpackPlugin.options.title %></title>
   </head>
   <body>
-    <noscript>
-      <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
-    </noscript>
+    <!-- vue.js entry point  -->
     <div id="app"></div>
-    <!-- built files will be auto injected -->
+
+    <!-- firbase script -->
+    <script src="https://www.gstatic.com/firebasejs/7.8.2/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.8.2/firebase-analytics.js"></script>
+    <script>
+      var firebaseConfig = {
+        apiKey: "AIzaSyDIv89Y223HFGxbngdGE_WFVWl8k3RqUMg",
+        authDomain: "hexschool-2020-challenge-list.firebaseapp.com",
+        databaseURL: "https://hexschool-2020-challenge-list.firebaseio.com",
+        projectId: "hexschool-2020-challenge-list",
+        storageBucket: "hexschool-2020-challenge-list.appspot.com",
+        messagingSenderId: "48003708025",
+        appId: "1:48003708025:web:d206e0e30db7b5e2b090a8",
+        measurementId: "G-SL4NDPQ3NK"
+      };
+      firebase.initializeApp(firebaseConfig);
+      firebase.analytics();
+    </script>
   </body>
 </html>
