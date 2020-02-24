@@ -4,14 +4,6 @@
       <div class="navbar-title">
         Hexschool 2020 鐵人賽文章搜尋器 ver 0.1.2
       </div>
-      <div class="navbar-info">
-        <span class="navbar-info-count">
-          節錄參與人數：{{List.length}}。
-        </span>
-        <span class="navbar-info-dataOrigin">
-          {{ ListOrigin }}。
-        </span>
-      </div>
     </nav>
     <div class="main-search-wrapper">
       <span class="search-input-wrapper">
