@@ -1,22 +1,39 @@
 <template>
   <span class="card-wrapper">
-    <div class="card-modal" target="_blank">
+    <div class="card-modal" target="_blank" >
       <div class="card-header">
         <span class="info-author">{{ author || '匿名工程師' }}</span>
         <span class="info-update">{{ updateTime }}</span>
       </div>
       <div class="card-body">
-        <div class="article-wrapper" v-for="(article, index) in blogList" :key="index">
-          <a class="article-link"
-            v-if="article.title.toLowerCase().indexOf(filter.toLowerCase()) > -1"
-            target="_blank"
-            :href="article.url">
-            <span class="article-title">{{ article.title }}</span>
-          </a>
+        <div class="article-layout-wrapper number" ref="count-article" :style="{'max-height': 36 * articleLimit +'px'}">
+          <template v-for="(article, index) in blogList">
+            <div
+              class="article-wrapper"
+              v-if="matchKeyword(article.title)"
+              :key="index"
+              :style="{'left':(pagiCurrPage - 1) * -360 +'px'}"
+              >
+              <a class="article-link"
+                :title="article.title"
+                target="_blank"
+                :href="article.url">
+                {{ article.title }}
+              </a>
+            </div>
+          </template>
         </div>
       </div>
       <div class="card-footer">
-
+        <div class="pagination-wrapper">
+          <div
+            class="pagi-page"
+            :class="{'is-curr': page === pagiCurrPage}"
+            v-for="page in pagiTotalPage"
+            @click="pagiCurrPage = page"
+            :key="page">{{ page }}
+            </div>
+        </div>
       </div>
     </div>
   </span>
@@ -30,59 +47,144 @@ export default {
     'author',
     'filter',
     'updateTime',
-    'blogList'
+    'blogList',
+    'articleLimit'
   ],
-  components: {
+  data () {
+    return {
+      pagiCurrPage: 1,
+      pagiTotalPage: 1
+    }
+  },
+  watch: {
+    filter () {
+      this.$nextTick(function () {
+        this.initPagination()
+      })
+    },
+    articleLimit () {
+      this.$nextTick(function () {
+        this.initPagination()
+      })
+    }
+  },
+  mounted () {
+    this.initPagination()
+  },
+  methods: {
+    matchKeyword (articleTitle) {
+      return (articleTitle.toLowerCase().indexOf(this.filter.toLowerCase()) > -1)
+    },
+    initPagination () {
+      this.countPaginationPage()
+      return false
+    },
+    countPaginationPage () {
+      const total = this.$refs['count-article'].childElementCount
+      this.pagiTotalPage = Math.ceil(total / this.articleLimit)
+      return false
+    }
   }
 }
 </script>
 
 <style scoped lang="scss">
-.card-modal {
+.card-wrapper {
   display:inline-block;
-  width:360px;
-  box-sizing: border-box;
   margin: 12px;
-  padding: 12px;
-  font-family: '微軟正黑體';
-  font-weight: bold;
-  font-size:15px;
-  transition: 0.3s;
-  background:white;
-  box-shadow: 0 2px 4px 0 #00000090;
-  border-radius: 4px;
-  overflow: hidden;
-  &:hover {
-    box-shadow: 0 4px 8px 0 #00000090;
-  }
-  .card-header {
-    display: flex;
-    justify-content:space-between;
-    border-bottom: 1px solid #1f1f1f;
-    margin-bottom: 8px;
-    padding-bottom: 4px;
+  .card-modal {
+    width:352px;
+    padding: 12px;
+    font-family: '微軟正黑體';
+    font-weight: bold;
+    font-size:15px;
     transition: 0.3s;
+    background:white;
+    box-shadow: 0 2px 4px 0 #00000090;
+    border-radius: 4px;
     overflow: hidden;
-  }
-  .card-body {
-  }
-  .card-footer {
-  }
-  .info-author {
-    margin-right: 12px;
-    font-size:14px;
-  }
-  .info-update {
-    font-size:14px;
-  }
-  .article-link {
-    display: block;
-    background: #f1f1e1;
-    margin-bottom: 8px;
-    padding:4px;
-    transition: 0.3s;
     &:hover {
-      background: #d8d8c3;
+      box-shadow: 0 4px 8px 2px #00000090;
+    }
+    .card-header {
+      display: flex;
+      justify-content:space-between;
+      border-bottom: 1px solid #1f1f1f;
+      margin-bottom: 12px;
+      padding-bottom: 4px;
+      transition: 0.3s;
+      overflow: hidden;
+    }
+    .card-body {
+      width:352px;
+      overflow: hidden;
+    }
+    .card-footer {
+    }
+    .info-author {
+      margin-right: 12px;
+      font-size:14px;
+    }
+    .info-update {
+      font-size:14px;
+    }
+  }
+}
+.article-layout-wrapper {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  height:100%;
+  .article-wrapper {
+    position:relative;
+    left:0px;
+    margin-right:8px;
+    transition:0.5s;
+    .article-link {
+      width:352px;
+      display: block;
+      height: 28px;
+      box-sizing: border-box;
+      background: #f1f1e1;
+      color:#0f3127;
+      margin-bottom: 8px;
+      padding:4px;
+      transition: 0.3s;
+      overflow : hidden;
+      white-space : nowrap;
+      text-overflow : ellipsis;
+      &:hover {
+        background: #cacab4;
+      }
+    }
+  }
+}
+.pagination-wrapper {
+  display: flex;
+  justify-content:center;
+  .pagi-page {
+    background: white;
+    color: #0f3127;
+    text-align: center;
+    line-height: 20px;
+    width:20px;
+    height:20px;
+    margin-right:4px;
+    border: 2px solid #0f3127;
+    border-radius: 50%;
+    font-size:14px;
+    font-family: arial;
+    transition: 0.2s ease-out;
+    cursor: pointer;
+    &.is-curr {
+      background: #0f3127;
+      color: white;
+      &:hover {
+        background: #0f3127;
+      }
+    }
+    &:hover {
+      background: #caece2;
     }
   }
 }

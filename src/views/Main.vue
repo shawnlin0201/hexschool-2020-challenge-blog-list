@@ -1,53 +1,67 @@
 <template>
   <div class="main-wrapper">
-    <nav class="main-navbar-wrapper">
-      <div class="navbar-title">
-        Hexschool 2020 鐵人賽文章搜尋器 ver 0.1.3
+    <nav class="main-navbar-wrapper" :class="{'is-collapsed': currScrollTop > 200}">
+      <div class="navbar-content">
+        <div class="navbar-title">
+          Hexschool 2020 鐵人賽文章搜尋器 ver 0.2.0
+        </div>
       </div>
     </nav>
-    <div class="main-search-wrapper">
-      <span class="search-input-wrapper">
-        <input class="search-input" type="text" placeholder="搜尋文章關鍵字" v-model="keyword" @input="sort = ''">
-        <div class="search-input-autoComplete"></div>
-      </span>
-      <button class="search-btn"
-        :class="{'is-active': sort === 'ascendDate'}"
-        @click="sortByAscendDate(), sort = 'ascendDate'">
-        依更新日期遠到近
-      </button>
-      <button
-        class="search-btn"
-        :class="{'is-active': sort === 'descendDate'}"
-        @click="sortByDescendDate(), sort = 'descendDate'">
-        依更新日期近到遠
-      </button>
-      <button class="search-btn"
-        :class="{'is-active': sort === 'ascendArticleCount', 'is-disable': keyword}"
-        @click="sortByAscendArticleCount(), sort = 'ascendArticleCount'">
-        依發布文章多到少
-      </button>
-      <button class="search-btn"
-        :class="{'is-active': sort === 'descendArticleCount', 'is-disable': keyword}"
-        @click="sortByDescendArticleCount(), sort = 'descendArticleCount'">
-        依發布文章少到多
-      </button>
-    </div>
-    <div class="main-status-wrapper">
-        <span class="status" ref="konami-chatbox">
-          <span class="konami-cat" ref="konami-cat">🐈</span>小幫手：<span class="notice">{{ statusNotice }}</span>
+    <div class="main-content-wrapper">
+      <div class="search-wrapper">
+        <span class="search-input-wrapper">
+          <input class="search-input" type="text" placeholder="搜尋文章關鍵字" v-model="keyword" @input="sort = ''">
+          <div class="search-input-autoComplete"></div>
         </span>
+        <span class="search-input-wrapper has-label">
+          <label class="search-label" for="limitArticleCount"> 限制筆數</label>
+          <input class="search-input" id="limitArticleCount" type="number" min="1" placeholder="欄位文章數" v-model="articleLimit">
+        </span>
+        <button class="search-btn"
+          :class="{'is-active': sort === 'ascendArticleCount', 'is-disable': keyword}"
+          @click="sortByAscendArticleCount(), sort = 'ascendArticleCount'">
+          依發布文章多到少
+        </button>
+        <button class="search-btn"
+          :class="{'is-active': sort === 'descendArticleCount', 'is-disable': keyword}"
+          @click="sortByDescendArticleCount(), sort = 'descendArticleCount'">
+          依發布文章少到多
+        </button>
+        <button class="search-btn"
+          :class="{'is-active': sort === 'ascendDate'}"
+          @click="sortByAscendDate(), sort = 'ascendDate'">
+          依更新日期遠到近
+        </button>
+        <button
+          class="search-btn"
+          :class="{'is-active': sort === 'descendDate'}"
+          @click="sortByDescendDate(), sort = 'descendDate'">
+          依更新日期近到遠
+        </button>
+      </div>
+      <div class="status-wrapper">
+          <span class="status" ref="konami-chatbox">
+            <span class="konami-cat" ref="konami-cat">🐈</span>小幫手：<span class="notice">{{ statusNotice }}</span>
+          </span>
+      </div>
+      <div class="list-wrapper" ref="list-wrapper">
+        <template v-for="data in List">
+          <Article
+            v-if="keywordFilter(data)"
+            :filter="keyword"
+            :key="data.updateTime"
+            :author="data.name"
+            :blogList="data.blogList"
+            :updateTime="data.updateTime"
+            :articleLimit="articleLimit"
+          />
+        </template>
+      </div>
     </div>
-    <div class="main-list-wrapper" ref="list-wrapper">
-      <template v-for="(data, index) in List">
-        <Article
-          v-if="keywordFilter(data)"
-          :filter="keyword"
-          :key="index"
-          :author="data.name"
-          :blogList="data.blogList"
-          :updateTime="data.updateTime"
-        />
-      </template>
+    <div class="main-controller-wrapper">
+      <div class="go-top">
+        <i class="icon go-top" @click="smoothToTop()" :class="{'is-active': currScrollTop > 200}"></i>
+      </div>
     </div>
   </div>
 </template>
@@ -68,9 +82,11 @@ export default {
       ListOrigin: '備份檔案（因目前 API、網路連線異常）',
       ListCount: 1,
       keyword: '',
-      sort: '',
+      sort: 'ascendArticleCount',
+      articleLimit: 3,
       statusNotice: '若是清單尚未出現你的文章，請至六角文章表單更新你的資訊，資料來源約 30 分鐘更新一次。',
-      konamiCode: []
+      konamiCode: [],
+      currScrollTop: 0
     }
   },
   watch: {
@@ -94,6 +110,7 @@ export default {
       this.ListCount = this.$refs['list-wrapper'].childElementCount
     })
     window.addEventListener('keydown', e => this.konami(e))
+    window.addEventListener('scroll', e => { this.currScrollTop = this.detectScrollTop() })
   },
   destroyed () {
     window.removeEventListener('keydown', e => this.konami(e))
@@ -105,6 +122,7 @@ export default {
           this.List = res.data
           this.formatListData()
           this.ListOrigin = '六角學院'
+          this.sortByAscendArticleCount()
         })
     },
     formatListData () {
@@ -178,6 +196,19 @@ export default {
       chatbox.left = '50%'
       chatbox.transform = 'translate(-50%, -50%)'
       this.statusNotice = '感謝你，我已經被釋放了！'
+    },
+    smoothToTop () {
+      const TOP = document.documentElement.scrollTop || document.body.scrollTop
+      if (TOP > 0) {
+        requestAnimationFrame(this.smoothToTop)
+        window.scrollTo(0, TOP - (TOP / 8))
+      }
+    },
+    detectScrollTop () {
+      const body = window.document.body
+      let document = window.document.documentElement
+      document = (document.clientHeight) ? document : body
+      return document.scrollTop
     }
   }
 }
@@ -188,27 +219,39 @@ export default {
 .main-wrapper {
   padding-top: 48px;
 }
+.main-content-wrapper{
+  width:100%;
+  max-width: 1200px;
+  margin:0 auto;
+  background: #4cb683;
+  box-shadow: 0 2px 6px 1px #00000090;
+}
 .main-navbar-wrapper {
   position: fixed;
   z-index:10;
   top:0;
   width:100%;
-  height:48px;
-  box-sizing: border-box;
-  padding: 12px;
-  display:flex;
-  justify-content: space-between;
-  align-items: center;
   background: #FFF;
   color:#0F3127;
   box-shadow: 0 2px 4px 0 #00000090;
   font-weight: bold;
   font-family: '微軟正黑體';
+  transition: 0.3s;
+  &.is-collapsed {
+    top:-48px;
+  }
+  .navbar-content {
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+    width:1200px;
+    height:48px;
+    margin:0 auto;
+    padding: 12px;
+    box-sizing: border-box;
+  }
 }
-.main-search-wrapper {
-
-}
-.main-status-wrapper {
+.status-wrapper {
   .status {
     display: inline-block;
     font-family: '微軟正黑體';
@@ -226,54 +269,99 @@ export default {
     }
   }
 }
-.main-list-wrapper {
+.list-wrapper {
   display:flex;
   justify-content: flex-start;
   flex-wrap: wrap;
 }
 
-// components wrapper
-.search-input-wrapper {
-  display: inline-block;
-  margin:12px;
-  .search-input {
-    padding: 8px;
-    border: none;
-    border-radius: 2px;
-    font-size:16px;
+.search-wrapper {
+  .search-input-wrapper {
+    display: inline-block;
+    margin:12px;
+    &.has-label {
+      background:black;
+      border-radius: 2px;
+      box-shadow: 0 2px 4px 0 #00000090;
+      .search-input {
+        padding: 6px;
+        font-family: '微軟正黑體';
+        font-weight: bold;
+        font-size:15px;
+        border: none;
+        border-radius: 0;
+        width:40px;
+        box-shadow: none;
+        &:focus {
+          outline: none;
+        }
+      }
+      .search-label {
+        font-family: '微軟正黑體';
+        font-weight: bold;
+        font-size:15px;
+        padding:0 8px;
+        color:white;
+      }
+    }
+    .search-input {
+      padding: 6px;
+      font-family: '微軟正黑體';
+      font-weight: bold;
+      font-size:15px;
+      border: none;
+      border-radius: 2px;
+      box-shadow: 0 2px 4px 0 #00000090;
+      &:focus {
+        outline: none;
+      }
+    }
+  }
+
+  .search-btn {
+    cursor: pointer;
     font-family: '微軟正黑體';
     font-weight: bold;
-    box-shadow: 0 2px 4px #00000080;
+    font-size:15px;
+    margin: 12px;
+    padding: 6px 8px;
+    border-radius: 2px;
+    transition: 0.5s;
+    background:#fff;
+    box-shadow: 0 2px 4px 0 #00000090;
+    overflow: hidden;
+    &:hover {
+      box-shadow: 0 4px 8px 0 #00000090;
+    }
     &:focus {
       outline: none;
+    }
+    &.is-active {
+      background: black;
+      color:white;
+    }
+    &.is-disable {
+      cursor: not-allowed;
+      opacity: 0.5;
     }
   }
 }
 
-.search-btn {
-  cursor: pointer;
-  font-family: '微軟正黑體';
-  font-weight: bold;
-  margin: 12px;
-  padding: 8px 12px;
-  border-radius: 2px;
-  transition: 0.5s;
-  background:#fff;
-  box-shadow: 0 2px 4px 0 #00000090;
-  overflow: hidden;
-  &:hover {
-    box-shadow: 0 4px 8px 0 #00000090;
-  }
-  &:focus {
-    outline: none;
-  }
-  &.is-active {
-    background: black;
-    color:white;
-  }
-  &.is-disable {
-    cursor: not-allowed;
-    opacity: 0.5;
+.main-controller-wrapper {
+  .go-top {
+    position:fixed;
+    right:-100%;
+    bottom:5%;
+    background:#00000080;
+    width:30px;
+    height:30px;
+    padding:8px;
+    text-align: center;
+    line-height: 40px;
+    transition:1s;
+    &.is-active {
+      right:5%;
+    }
   }
 }
 </style>
