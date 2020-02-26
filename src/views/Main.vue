@@ -51,6 +51,7 @@
             :filter="keyword"
             :key="data.updateTime"
             :author="data.name"
+            :blogUrl="data.blogUrl"
             :blogList="data.blogList"
             :updateTime="data.updateTime"
             :articleLimit="articleLimit"

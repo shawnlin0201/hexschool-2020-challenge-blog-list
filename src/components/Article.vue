@@ -2,11 +2,13 @@
   <span class="card-wrapper">
     <div class="card-modal" target="_blank" >
       <div class="card-header">
+
+        <span class="info-subscribe" @click="subscribe(blogUrl)">追蹤</span>
         <span class="info-author">{{ author || '匿名工程師' }}</span>
         <span class="info-update">{{ updateTime }}</span>
       </div>
       <div class="card-body">
-        <div class="article-layout-wrapper number" ref="count-article" :style="{'max-height': 36 * articleLimit +'px'}">
+        <div class="article-layout-wrapper" ref="count-article" :style="{'max-height': 36 * articleLimit +'px'}">
           <template v-for="(article, index) in blogList">
             <div
               class="article-wrapper"
@@ -45,6 +47,7 @@ export default {
   name: 'Article',
   props: [
     'author',
+    'blogUrl',
     'filter',
     'updateTime',
     'blogList',
@@ -83,6 +86,14 @@ export default {
       const total = this.$refs['count-article'].childElementCount
       this.pagiTotalPage = Math.ceil(total / this.articleLimit)
       return false
+    },
+    subscribe (url) {
+      // todo: 收藏、檢查收藏、取消收藏
+      const list = (localStorage.getItem('subscribeList'))
+        ? JSON.parse(localStorage.getItem('subscribeList'))
+        : { subscribeList: [] }
+      list.subscribeList.push(url)
+      localStorage.setItem('subscribeList', JSON.stringify(list))
     }
   }
 }
