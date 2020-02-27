@@ -1,21 +1,36 @@
 <template>
   <div class="main-wrapper">
-    <nav class="main-navbar-wrapper" :class="{'is-collapsed': currScrollTop > 200}">
+    <nav class="main-navbar-wrapper" :class="{'is-collapsed': currScrollTop > 180}">
       <div class="navbar-content">
         <div class="navbar-title">
-          Hexschool 2020 鐵人賽文章搜尋器 ver 0.2.0
+          Hexschool 2020 鐵人賽文章搜尋器 ver 0.3.0
         </div>
       </div>
     </nav>
     <div class="main-content-wrapper">
       <div class="search-wrapper">
-        <span class="search-input-wrapper">
+        <span class="search-group-wrapper">
           <input class="search-input" type="text" placeholder="搜尋文章關鍵字" v-model="keyword" @input="sort = ''">
           <div class="search-input-autoComplete"></div>
         </span>
-        <span class="search-input-wrapper has-label">
-          <label class="search-label" for="limitArticleCount"> 限制筆數</label>
+        <span class="search-group-wrapper has-label">
+          <label class="search-label" for="limitArticleCount"> 文章顯示筆數</label>
           <input class="search-input" id="limitArticleCount" type="number" min="1" placeholder="欄位文章數" v-model="articleLimit">
+        </span>
+        <span class="search-group-wrapper has-label">
+          <label class="search-label" for="limitArticleCount"> 列表</label>
+          <button
+            class="search-btn"
+            :class="{'is-active': !isSubScribeModeOpen}"
+            @click="isSubScribeModeOpen = false">
+            全部
+          </button>
+          <button
+            class="search-btn"
+            :class="{'is-active': isSubScribeModeOpen}"
+            @click="isSubScribeModeOpen = true">
+            收藏
+          </button>
         </span>
         <button class="search-btn"
           :class="{'is-active': sort === 'ascendArticleCount', 'is-disable': keyword}"
@@ -47,7 +62,7 @@
       <div class="list-wrapper" ref="list-wrapper">
         <template v-for="data in List">
           <Article
-            v-if="keywordFilter(data)"
+            v-if="searchFilter(data)"
             :filter="keyword"
             :key="data.updateTime"
             :author="data.name"
@@ -58,10 +73,15 @@
           />
         </template>
       </div>
+      <template v-if="this.ListCount === 0">
+        <div class="main-not-found-wrapper">
+          <div class="not-found" @click="keyword = '' , isSubScribeModeOpen = false">找不到相關文章！<br>點此清除搜尋條件！</div>
+        </div>
+      </template>
     </div>
     <div class="main-controller-wrapper">
       <div class="go-top">
-        <i class="icon go-top" @click="smoothToTop()" :class="{'is-active': currScrollTop > 200}"></i>
+        <i class="icon go-top" @click="smoothToTop()" :class="{'is-active': currScrollTop > 180}"></i>
       </div>
     </div>
   </div>
@@ -84,6 +104,7 @@ export default {
       ListCount: 1,
       keyword: '',
       sort: 'ascendArticleCount',
+      isSubScribeModeOpen: false,
       articleLimit: 3,
       statusNotice: '若是清單尚未出現你的文章，請至六角文章表單更新你的資訊，資料來源約 30 分鐘更新一次。',
       konamiCode: [],
@@ -91,15 +112,16 @@ export default {
     }
   },
   watch: {
+    articleLimit () {
+      if (this.articleLimit < 1) {
+        this.articleLimit = 1
+      }
+    },
     keyword () {
-      this.$nextTick(() => {
-        this.ListCount = this.$refs['list-wrapper'].childElementCount
-        if (this.ListCount === 0) {
-          this.statusNotice = `咦？找不到有關 " ${this.keyword}" 的文章，換換搜尋關鍵字吧！`
-        } else {
-          this.changeStatusNotice()
-        }
-      })
+      this.countList()
+    },
+    isSubScribeModeOpen () {
+      this.countList()
     },
     sort () {
       this.changeStatusNotice()
@@ -155,12 +177,41 @@ export default {
     sortByDescendArticleCount () {
       this.List = this.List.sort((a, b) => a.blogList.length - b.blogList.length)
     },
-    keywordFilter (data) {
-      let flag = false
+    searchFilter (data) {
+      const flag = {
+        keyword: true,
+        subscribe: true
+      }
+      const keywordMode = true
+      const isSubScribeModeOpen = this.isSubScribeModeOpen
       data.blogList.forEach(article => {
-        if (article.title.toLowerCase().indexOf(this.keyword.toLowerCase()) > -1) { flag = true }
+        if (keywordMode) {
+          flag.keyword = (article.title.toLowerCase().indexOf(this.keyword.toLowerCase()) > -1)
+        }
       })
-      return flag
+
+      if (isSubScribeModeOpen) {
+        const list = (localStorage.getItem('subscribeList'))
+          ? JSON.parse(localStorage.getItem('subscribeList'))
+          : { subscribeList: [] }
+        if (list.subscribeList.indexOf(data.blogUrl) > -1) {
+          flag.subscribe = true
+        } else {
+          flag.subscribe = false
+        }
+      }
+
+      return flag.keyword && flag.subscribe
+    },
+    countList () {
+      this.$nextTick(() => {
+        this.ListCount = this.$refs['list-wrapper'].childElementCount
+        if (this.ListCount === 0) {
+          this.statusNotice = `咦？找不到有關 " ${this.keyword}" 的文章，換換搜尋關鍵字吧！`
+        } else {
+          this.changeStatusNotice()
+        }
+      })
     },
     changeStatusNotice () {
       const noticeCollection = [
@@ -232,8 +283,8 @@ export default {
   z-index:10;
   top:0;
   width:100%;
-  background: #FFF;
-  color:#0F3127;
+  background: #0F3127;
+  color:#FFF;
   box-shadow: 0 2px 4px 0 #00000090;
   font-weight: bold;
   font-family: '微軟正黑體';
@@ -277,11 +328,13 @@ export default {
 }
 
 .search-wrapper {
-  .search-input-wrapper {
+  .search-group-wrapper {
     display: inline-block;
     margin:12px;
+    overflow: hidden;
+    vertical-align:bottom;
     &.has-label {
-      background:black;
+      background:#103523;
       border-radius: 2px;
       box-shadow: 0 2px 4px 0 #00000090;
       .search-input {
@@ -317,6 +370,19 @@ export default {
         outline: none;
       }
     }
+    .search-btn {
+      margin:0;
+      border-radius: 0;
+      box-shadow: none;
+      &:hover {
+        box-shadow: none;
+      }
+      &.is-active {
+        box-shadow: none;
+        background: #91ffca;
+        color: #103523;
+      }
+    }
   }
 
   .search-btn {
@@ -338,12 +404,33 @@ export default {
       outline: none;
     }
     &.is-active {
-      background: black;
+      background: #103523;
       color:white;
     }
     &.is-disable {
       cursor: not-allowed;
       opacity: 0.5;
+    }
+  }
+}
+.main-not-found-wrapper {
+  display:flex;
+  justify-content: center;
+  .not-found {
+    text-align: center;
+    margin: 12px;
+    padding: 8px 12px;
+    font-family: '微軟正黑體';
+    font-weight: bold;
+    font-size:15px;
+    transition: 0.3s;
+    background:#103523;
+    color:white;
+    box-shadow: 0 2px 4px 0 #00000090;
+    border-radius: 4px;
+    cursor: pointer;
+    &:hover {
+      box-shadow: 0 4px 8px 2px #00000090;
     }
   }
 }

@@ -2,10 +2,8 @@
   <span class="card-wrapper">
     <div class="card-modal" target="_blank" >
       <div class="card-header">
-
-        <span class="info-subscribe" @click="subscribe(blogUrl)">追蹤</span>
         <span class="info-author">{{ author || '匿名工程師' }}</span>
-        <span class="info-update">{{ updateTime }}</span>
+        <span class="info-subscribe" @click="subscribe(blogUrl)" :class="{'is-subscribed': isSubscribed}">{{ isSubscribed ? '取消追蹤' : '追蹤作者'  }}</span>
       </div>
       <div class="card-body">
         <div class="article-layout-wrapper" ref="count-article" :style="{'max-height': 36 * articleLimit +'px'}">
@@ -56,7 +54,8 @@ export default {
   data () {
     return {
       pagiCurrPage: 1,
-      pagiTotalPage: 1
+      pagiTotalPage: 1,
+      isSubscribed: false
     }
   },
   watch: {
@@ -73,6 +72,7 @@ export default {
   },
   mounted () {
     this.initPagination()
+    this.checkSubscribed()
   },
   methods: {
     matchKeyword (articleTitle) {
@@ -80,20 +80,35 @@ export default {
     },
     initPagination () {
       this.countPaginationPage()
-      return false
     },
     countPaginationPage () {
       const total = this.$refs['count-article'].childElementCount
       this.pagiTotalPage = Math.ceil(total / this.articleLimit)
-      return false
     },
-    subscribe (url) {
-      // todo: 收藏、檢查收藏、取消收藏
+    subscribe (target) {
       const list = (localStorage.getItem('subscribeList'))
         ? JSON.parse(localStorage.getItem('subscribeList'))
         : { subscribeList: [] }
-      list.subscribeList.push(url)
+
+      if (list.subscribeList.indexOf(target) > -1) {
+        list.subscribeList = list.subscribeList.filter(item => item !== target)
+        this.isSubscribed = false
+      } else {
+        list.subscribeList.push(target)
+        this.isSubscribed = true
+      }
+
       localStorage.setItem('subscribeList', JSON.stringify(list))
+    },
+    checkSubscribed () {
+      const list = (localStorage.getItem('subscribeList'))
+        ? JSON.parse(localStorage.getItem('subscribeList'))
+        : { subscribeList: [] }
+      if (list.subscribeList.indexOf(this.blogUrl) > -1) {
+        this.isSubscribed = true
+      } else {
+        this.isSubscribed = false
+      }
     }
   }
 }
@@ -105,7 +120,7 @@ export default {
   margin: 12px;
   .card-modal {
     width:352px;
-    padding: 12px;
+    padding: 8px 12px;
     font-family: '微軟正黑體';
     font-weight: bold;
     font-size:15px;
@@ -120,9 +135,10 @@ export default {
     .card-header {
       display: flex;
       justify-content:space-between;
+      align-items: center;
       border-bottom: 1px solid #1f1f1f;
       margin-bottom: 12px;
-      padding-bottom: 4px;
+      padding: 8px 0;
       transition: 0.3s;
       overflow: hidden;
     }
@@ -132,12 +148,24 @@ export default {
     }
     .card-footer {
     }
+    .info-subscribe {
+      font-size: 14px;
+      padding: 2px 4px;
+      border: 2px solid #1e6642;
+      color: #1e6642;
+      border-radius: 4px;
+      transition: 0.2s ease-out;
+      &:hover {
+        background: #1e664233;
+        box-shadow: 0 0 2px 0px #caece2;
+      }
+      &.is-subscribed {
+        background: #1e6642;
+        color: white;
+      }
+    }
     .info-author {
       margin-right: 12px;
-      font-size:14px;
-    }
-    .info-update {
-      font-size:14px;
     }
   }
 }
