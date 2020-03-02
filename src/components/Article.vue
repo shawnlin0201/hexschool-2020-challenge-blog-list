@@ -80,6 +80,7 @@ export default {
     },
     initPagination () {
       this.countPaginationPage()
+      this.pagiCurrPage = 1
     },
     countPaginationPage () {
       const total = this.$refs['count-article'].childElementCount
