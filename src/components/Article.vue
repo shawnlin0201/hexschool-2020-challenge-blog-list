@@ -155,6 +155,7 @@ export default {
       color: #1e6642;
       border-radius: 4px;
       transition: 0.2s ease-out;
+      cursor: pointer;
       &:hover {
         background: #1e664233;
         box-shadow: 0 0 2px 0px #caece2;

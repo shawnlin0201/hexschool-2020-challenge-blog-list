@@ -1,89 +1,122 @@
 <template>
   <div class="main-wrapper">
-    <nav class="main-navbar-wrapper" :class="{'is-collapsed': currScrollTop > 180}">
-      <div class="navbar-content">
-        <div class="navbar-title">
-          Hexschool 2020 鐵人賽文章搜尋器 ver 0.3.0
+    <!-- navbar start  -->
+      <nav class="main-navbar-wrapper" :class="{'is-collapsed': currScrollTop > 180}">
+        <div class="navbar-content">
+          <div class="navbar-title">
+            Hexschool 2020 鐵人賽文章搜尋器 ver 0.3.1
+          </div>
         </div>
-      </div>
-    </nav>
+      </nav>
+    <!-- navbar end  -->
     <div class="main-content-wrapper">
-      <div class="search-wrapper">
-        <span class="search-group-wrapper">
-          <input class="search-input" type="text" placeholder="搜尋文章關鍵字" v-model="keyword" @input="sort = ''">
-          <div class="search-input-autoComplete"></div>
-        </span>
-        <span class="search-group-wrapper has-label">
-          <label class="search-label" for="limitArticleCount"> 文章顯示筆數</label>
-          <input class="search-input" id="limitArticleCount" type="number" min="1" placeholder="欄位文章數" v-model="articleLimit">
-        </span>
-        <span class="search-group-wrapper has-label">
-          <label class="search-label" for="limitArticleCount"> 列表</label>
-          <button
-            class="search-btn"
-            :class="{'is-active': !isSubScribeModeOpen}"
-            @click="isSubScribeModeOpen = false">
-            全部
-          </button>
-          <button
-            class="search-btn"
-            :class="{'is-active': isSubScribeModeOpen}"
-            @click="isSubScribeModeOpen = true">
-            收藏
-          </button>
-        </span>
-        <button class="search-btn"
-          :class="{'is-active': sort === 'ascendArticleCount', 'is-disable': keyword}"
-          @click="sortByAscendArticleCount(), sort = 'ascendArticleCount'">
-          依發布文章多到少
-        </button>
-        <button class="search-btn"
-          :class="{'is-active': sort === 'descendArticleCount', 'is-disable': keyword}"
-          @click="sortByDescendArticleCount(), sort = 'descendArticleCount'">
-          依發布文章少到多
-        </button>
-        <button class="search-btn"
-          :class="{'is-active': sort === 'ascendDate'}"
-          @click="sortByAscendDate(), sort = 'ascendDate'">
-          依更新日期遠到近
-        </button>
-        <button
-          class="search-btn"
-          :class="{'is-active': sort === 'descendDate'}"
-          @click="sortByDescendDate(), sort = 'descendDate'">
-          依更新日期近到遠
-        </button>
-      </div>
-      <div class="status-wrapper">
-          <span class="status" ref="konami-chatbox">
-            <span class="konami-cat" ref="konami-cat">🐈</span>小幫手：<span class="notice">{{ statusNotice }}</span>
-          </span>
-      </div>
-      <div class="list-wrapper" ref="list-wrapper">
-        <template v-for="data in List">
-          <Article
-            v-if="searchFilter(data)"
-            :filter="keyword"
-            :key="data.updateTime"
-            :author="data.name"
-            :blogUrl="data.blogUrl"
-            :blogList="data.blogList"
-            :updateTime="data.updateTime"
-            :articleLimit="articleLimit"
-          />
-        </template>
-      </div>
-      <template v-if="this.ListCount === 0">
-        <div class="main-not-found-wrapper">
-          <div class="not-found" @click="keyword = '' , isSubScribeModeOpen = false">找不到相關文章！<br>點此清除搜尋條件！</div>
+      <!-- search filter start -->
+        <div class="search-wrapper">
+          <!-- keyword func start  -->
+            <span class="search-group-wrapper">
+              <input class="search-input" type="text" placeholder="搜尋文章關鍵字" v-model="keyword" @input="sort = ''">
+              <div class="search-input-autoComplete"></div>
+            </span>
+          <!-- keyword func end  -->
+          <!-- limit func start  -->
+            <span class="search-group-wrapper has-label">
+              <label class="search-label" for="limitArticleCount"> 文章顯示筆數</label>
+              <input class="search-input" id="limitArticleCount" type="number" min="1" placeholder="欄位文章數" v-model="articleLimit">
+            </span>
+          <!-- limit func end -->
+          <!-- subscribe func start -->
+            <span class="search-group-wrapper has-label">
+              <label class="search-label" for="limitArticleCount"> 列表</label>
+              <button
+                class="search-btn"
+                :class="{'is-active': !isSubScribeModeOpen}"
+                @click="isSubScribeModeOpen = false">
+                全部
+              </button>
+              <button
+                class="search-btn"
+                :class="{'is-active': isSubScribeModeOpen}"
+                @click="isSubScribeModeOpen = true">
+                收藏
+              </button>
+            </span>
+          <!-- subscribe func end -->
+          <!-- sort func start -->
+            <span class="search-group-wrapper has-label">
+              <label class="search-label" for="limitArticleCount"> 排序</label>
+              <div class="search-select">
+                <button
+                  class="search-btn"
+                  :class="{'is-active': sort === 'ascendArticleCount'}"
+                  @click="sortByAscendArticleCount(), sort = 'ascendArticleCount'">
+                  發布文章多到少
+                </button>
+                <button
+                  class="search-btn"
+                  :class="{'is-active': sort === 'descendArticleCount'}"
+                  @click="sortByDescendArticleCount(), sort = 'descendArticleCount'">
+                  發布文章少到多
+                </button>
+                <button
+                  class="search-btn"
+                  :class="{'is-active': sort === 'ascendDate'}"
+                  @click="sortByAscendDate(), sort = 'ascendDate'">
+                  更新日期遠到近
+                </button>
+                <button
+                  class="search-btn"
+                  :class="{'is-active': sort === 'descendDate'}"
+                  @click="sortByDescendDate(), sort = 'descendDate'">
+                  更新日期近到遠
+                </button>
+              </div>
+            </span>
+          <!-- sort func end -->
+          <!-- status func end -->
+            <div class="status-wrapper">
+              <span class="status" ref="konami-chatbox">
+                <span class="konami-cat" ref="konami-cat">🐈</span>小幫手：<span class="notice">{{ statusNotice }}</span>
+              </span>
+            </div>
+          <!-- status func end -->
         </div>
-      </template>
+      <!-- search filter end -->
+      <!-- search result start -->
+        <div class="list-wrapper" ref="list-wrapper">
+          <template v-for="data in List">
+            <Article
+              v-if="searchFilter(data)"
+              :filter="keyword"
+              :key="data.updateTime"
+              :author="data.name"
+              :blogUrl="data.blogUrl"
+              :blogList="data.blogList"
+              :updateTime="data.updateTime"
+              :articleLimit="articleLimit"
+            />
+          </template>
+        </div>
+        <template v-if="this.ListCount === 0">
+          <div class="main-not-found-wrapper">
+            <div class="not-found" @click="keyword = '' , isSubScribeModeOpen = false">找不到相關文章！<br>點此清除搜尋條件！</div>
+          </div>
+        </template>
+      <!-- search result end -->
     </div>
-    <div class="main-controller-wrapper">
-      <div class="go-top">
-        <i class="icon go-top" @click="smoothToTop()" :class="{'is-active': currScrollTop > 180}"></i>
+    <!-- footer start -->
+      <div class="main-footer-wrapper">
+        <div class="footer-content">
+          本網站由 <a href="https://shawnlin0201.github.io/">ShawnL</a> 建置，文章資料來源為 <a href="https://github.com/hexschool/w3hexschool-API">{{ ListOrigin }}</a>。
+        </div>
       </div>
-    </div>
+    <!-- footer end -->
+    <!-- extra func start -->
+      <div class="main-controller-wrapper">
+        <div class="go-top">
+          <i class="icon go-top" @click="smoothToTop()" :class="{'is-active': currScrollTop > 180}"></i>
+        </div>
+      </div>
+    <!-- extra func end -->
   </div>
 </template>
 
@@ -357,6 +390,9 @@ export default {
         padding:0 8px;
         color:white;
       }
+      .search-select {
+        display:inline-block;
+      }
     }
     .search-input {
       padding: 6px;
@@ -450,6 +486,26 @@ export default {
     &.is-active {
       right:5%;
     }
+  }
+}
+
+.main-footer-wrapper {
+  width:100%;
+  background:#103523;
+  .footer-content {
+    margin-top:100px;
+    width:100%;
+    max-width:1200px;
+    padding:12px;
+    margin:0 auto;
+    font-family: '微軟正黑體';
+    font-weight: bold;
+    font-size:15px;
+    color: #fff;
+    text-align:center;
+  }
+  a {
+    text-decoration: underline;
   }
 }
 </style>
