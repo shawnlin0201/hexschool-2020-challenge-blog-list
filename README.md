@@ -1,4 +1,4 @@
-# Hexschool 2020 鐵人賽文章搜尋器 ver 0.3.1
+# Hexschool 2020 鐵人賽文章搜尋器 ver 0.4.0
 此專案目的在於搜尋 [六角學院 鼠年全馬鐵人挑戰](https://www.hexschool.com/2019/11/14/2019-11-14-w3Hexschool-2020-challenge/) 所參賽之文章，並基於六角學院釋出的 [API](https://github.com/hexschool/w3hexschool-API) 所開發的搜尋器。
 
 <img width=300 src="https://firebasestorage.googleapis.com/v0/b/hexschool-api.appspot.com/o/blog%2F2019%2F11%2Fw3HS%E9%90%B5%E4%BA%BA%E8%B3%BDbanner.png?alt=media&amp;token=3f0ef8fd-6285-47ac-a159-83ff3fb3972e" alt="hexschool-2020-challenge">
@@ -20,3 +20,4 @@
 - 0.2.0 (2020/02/26)：新增 pagination 分頁功能以及相關的限制筆數。
 - 0.3.0 (2020/02/27)：新增 收藏模式(#4)、調整樣式與部分功能微調。
 - 0.3.1 (2020/03/02)：新增 footer(#6)、調整樣式、title、favicon、修正 pagination(#8)。
+- 0.4.0 (2020/03/12)：新增版本更新公告、修正 Identity ID(#8)。
