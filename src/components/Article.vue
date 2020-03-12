@@ -3,7 +3,7 @@
     <div class="card-modal" target="_blank" >
       <div class="card-header">
         <span class="info-author">{{ author || '匿名工程師' }}</span>
-        <span class="info-subscribe" @click="subscribe(blogUrl)" :class="{'is-subscribed': isSubscribed}">{{ isSubscribed ? '取消追蹤' : '追蹤作者'  }}</span>
+        <span class="info-subscribe" @click="subscribe(authorKeyId)" :class="{'is-subscribed': isSubscribed}">{{ isSubscribed ? '取消追蹤' : '追蹤作者'  }}</span>
       </div>
       <div class="card-body">
         <div class="article-layout-wrapper" ref="count-article" :style="{'max-height': 36 * articleLimit +'px'}">
@@ -49,7 +49,8 @@ export default {
     'filter',
     'updateTime',
     'blogList',
-    'articleLimit'
+    'articleLimit',
+    'authorKeyId'
   ],
   data () {
     return {
@@ -105,7 +106,7 @@ export default {
       const list = (localStorage.getItem('subscribeList'))
         ? JSON.parse(localStorage.getItem('subscribeList'))
         : { subscribeList: [] }
-      if (list.subscribeList.indexOf(this.blogUrl) > -1) {
+      if (list.subscribeList.indexOf(this.authorKeyId) > -1) {
         this.isSubscribed = true
       } else {
         this.isSubscribed = false

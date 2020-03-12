@@ -4,7 +4,7 @@
       <nav class="main-navbar-wrapper" :class="{'is-collapsed': currScrollTop > 180}">
         <div class="navbar-content">
           <div class="navbar-title">
-            Hexschool 2020 鐵人賽文章搜尋器 ver 0.3.1
+            Hexschool 2020 鐵人賽文章搜尋器 ver {{ appVersion }}
           </div>
         </div>
       </nav>
@@ -89,6 +89,7 @@
               :filter="keyword"
               :key="data.updateTime"
               :author="data.name"
+              :authorKeyId="data.keyID"
               :blogUrl="data.blogUrl"
               :blogList="data.blogList"
               :updateTime="data.updateTime"
@@ -111,10 +112,13 @@
       </div>
     <!-- footer end -->
     <!-- extra func start -->
-      <div class="main-controller-wrapper">
+      <div class="go-top-wrapper">
         <div class="go-top">
           <i class="icon go-top" @click="smoothToTop()" :class="{'is-active': currScrollTop > 180}"></i>
         </div>
+      </div>
+      <div class="lightbox-wrapper">
+        test
       </div>
     <!-- extra func end -->
   </div>
@@ -130,6 +134,9 @@ export default {
   components: {
     Article
   },
+  props: [
+    'appVersion'
+  ],
   data () {
     return {
       List: mockListData,
@@ -227,7 +234,7 @@ export default {
         const list = (localStorage.getItem('subscribeList'))
           ? JSON.parse(localStorage.getItem('subscribeList'))
           : { subscribeList: [] }
-        if (list.subscribeList.indexOf(data.blogUrl) > -1) {
+        if (list.subscribeList.indexOf(data.keyID) > -1) {
           flag.subscribe = true
         } else {
           flag.subscribe = false
@@ -471,24 +478,6 @@ export default {
   }
 }
 
-.main-controller-wrapper {
-  .go-top {
-    position:fixed;
-    right:-100%;
-    bottom:5%;
-    background:#00000080;
-    width:30px;
-    height:30px;
-    padding:8px;
-    text-align: center;
-    line-height: 40px;
-    transition:1s;
-    &.is-active {
-      right:5%;
-    }
-  }
-}
-
 .main-footer-wrapper {
   width:100%;
   background:#103523;
@@ -506,6 +495,24 @@ export default {
   }
   a {
     text-decoration: underline;
+  }
+}
+
+.go-top-wrapper {
+  .go-top {
+    position:fixed;
+    right:-100%;
+    bottom:5%;
+    background:#00000080;
+    width:30px;
+    height:30px;
+    padding:8px;
+    text-align: center;
+    line-height: 40px;
+    transition:1s;
+    &.is-active {
+      right:5%;
+    }
   }
 }
 </style>
