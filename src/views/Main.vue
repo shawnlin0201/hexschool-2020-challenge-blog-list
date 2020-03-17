@@ -117,9 +117,6 @@
           <i class="icon go-top" @click="smoothToTop()" :class="{'is-active': currScrollTop > 180}"></i>
         </div>
       </div>
-      <div class="lightbox-wrapper">
-        test
-      </div>
     <!-- extra func end -->
   </div>
 </template>
