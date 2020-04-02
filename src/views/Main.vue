@@ -11,81 +11,83 @@
     <!-- navbar end  -->
     <div class="main-content-wrapper">
       <!-- search filter start -->
-        <div class="search-wrapper">
-          <!-- keyword func start  -->
-            <span class="search-group-wrapper">
-              <input class="search-input" type="text" placeholder="搜尋文章關鍵字" v-model="keyword" @input="sort = ''">
-              <div class="search-input-autoComplete"></div>
-            </span>
-          <!-- keyword func end  -->
-          <!-- limit func start  -->
-            <span class="search-group-wrapper has-label">
-              <label class="search-label" for="limitArticleCount"> 文章顯示筆數</label>
-              <input class="search-input" id="limitArticleCount" type="number" min="1" placeholder="欄位文章數" v-model="articleLimit">
-            </span>
-          <!-- limit func end -->
-          <!-- subscribe func start -->
-            <span class="search-group-wrapper has-label">
-              <label class="search-label" for="limitArticleCount"> 列表</label>
-              <button
-                class="search-btn"
-                :class="{'is-active': !isSubScribeModeOpen}"
-                @click="isSubScribeModeOpen = false">
-                全部
-              </button>
-              <button
-                class="search-btn"
-                :class="{'is-active': isSubScribeModeOpen}"
-                @click="isSubScribeModeOpen = true">
-                收藏
-              </button>
-            </span>
-          <!-- subscribe func end -->
-          <!-- sort func start -->
-            <span class="search-group-wrapper has-label">
-              <label class="search-label" for="limitArticleCount"> 排序</label>
-              <div class="search-select">
-                <button
-                  class="search-btn"
-                  :class="{'is-active': sort === 'ascendArticleCount'}"
-                  @click="sortByAscendArticleCount(), sort = 'ascendArticleCount'">
-                  發布文章多到少
-                </button>
-                <button
-                  class="search-btn"
-                  :class="{'is-active': sort === 'descendArticleCount'}"
-                  @click="sortByDescendArticleCount(), sort = 'descendArticleCount'">
-                  發布文章少到多
-                </button>
-                <button
-                  class="search-btn"
-                  :class="{'is-active': sort === 'ascendDate'}"
-                  @click="sortByAscendDate(), sort = 'ascendDate'">
-                  更新日期遠到近
-                </button>
-                <button
-                  class="search-btn"
-                  :class="{'is-active': sort === 'descendDate'}"
-                  @click="sortByDescendDate(), sort = 'descendDate'">
-                  更新日期近到遠
-                </button>
-              </div>
-            </span>
-          <!-- sort func end -->
-          <!-- status func end -->
-            <div class="status-wrapper">
-              <span class="status" ref="konami-chatbox">
-                <span class="konami-cat" ref="konami-cat">🐈</span>小幫手：<span class="notice">{{ statusNotice }}</span>
+        <div class="search-wrapper" :class="{'is-fixed': currScrollTop > 30}">
+          <div class="search-function">
+            <!-- keyword func start  -->
+              <span class="search-group-wrapper">
+                <input class="search-input" type="text" placeholder="搜尋文章關鍵字" v-model="keyword" @input="sort = ''">
+                <div class="search-input-autoComplete"></div>
               </span>
-            </div>
-          <!-- status func end -->
+            <!-- keyword func end  -->
+            <!-- limit func start  -->
+              <span class="search-group-wrapper has-label">
+                <label class="search-label" for="limitArticleCount"> 文章顯示筆數</label>
+                <input class="search-input" id="limitArticleCount" type="number" min="1" placeholder="欄位文章數" v-model="articleLimit">
+              </span>
+            <!-- limit func end -->
+            <!-- subscribe func start -->
+              <span class="search-group-wrapper has-label">
+                <label class="search-label" for="limitArticleCount"> 列表</label>
+                <button
+                  class="search-btn"
+                  :class="{'is-active': !isSubScribeModeOpen}"
+                  @click="isSubScribeModeOpen = false">
+                  全部
+                </button>
+                <button
+                  class="search-btn"
+                  :class="{'is-active': isSubScribeModeOpen}"
+                  @click="isSubScribeModeOpen = true">
+                  收藏
+                </button>
+              </span>
+            <!-- subscribe func end -->
+            <!-- sort func start -->
+              <span class="search-group-wrapper has-label">
+                <label class="search-label" for="limitArticleCount"> 排序</label>
+                <div class="search-select">
+                  <button
+                    class="search-btn"
+                    :class="{'is-active': sort === 'ascendArticleCount'}"
+                    @click="sortByAscendArticleCount(), sort = 'ascendArticleCount'">
+                    發布文章多到少
+                  </button>
+                  <button
+                    class="search-btn"
+                    :class="{'is-active': sort === 'descendArticleCount'}"
+                    @click="sortByDescendArticleCount(), sort = 'descendArticleCount'">
+                    發布文章少到多
+                  </button>
+                  <button
+                    class="search-btn"
+                    :class="{'is-active': sort === 'ascendDate'}"
+                    @click="sortByAscendDate(), sort = 'ascendDate'">
+                    更新日期遠到近
+                  </button>
+                  <button
+                    class="search-btn"
+                    :class="{'is-active': sort === 'descendDate'}"
+                    @click="sortByDescendDate(), sort = 'descendDate'">
+                    更新日期近到遠
+                  </button>
+                </div>
+              </span>
+            <!-- sort func end -->
+            <!-- status func end -->
+              <div class="status-wrapper">
+                <span class="status" ref="konami-chatbox">
+                  <span class="konami-cat" ref="konami-cat">🐈</span>小幫手：<span class="notice">{{ statusNotice }}</span>
+                </span>
+              </div>
+            <!-- status func end -->
+          </div>
         </div>
       <!-- search filter end -->
       <!-- search result start -->
         <div class="list-wrapper" ref="list-wrapper">
           <template v-for="data in List">
             <Article
-              v-if="searchFilter(data)"
+              v-show="searchFilter(data)"
               :filter="keyword"
               :key="data.updateTime"
               :author="data.name"
@@ -219,15 +221,18 @@ export default {
         keyword: true,
         subscribe: true
       }
-      const keywordMode = true
       const isSubScribeModeOpen = this.isSubScribeModeOpen
-      data.blogList.forEach(article => {
-        if (keywordMode) {
-          flag.keyword = (article.title.toLowerCase().indexOf(this.keyword.toLowerCase()) > -1)
+
+      flag.keyword = false
+      data.blogList.forEach((article, idx) => {
+        if (article.title.toLowerCase().indexOf(this.keyword.toLowerCase()) > -1) {
+          flag.keyword = true
         }
       })
 
       if (isSubScribeModeOpen) {
+        flag.subscribe = false
+
         const list = (localStorage.getItem('subscribeList'))
           ? JSON.parse(localStorage.getItem('subscribeList'))
           : { subscribeList: [] }
@@ -365,6 +370,17 @@ export default {
 }
 
 .search-wrapper {
+  &.is-fixed {
+    position: fixed;
+    display:flex;
+    justify-content: center;
+    top:0;
+    left:0;
+    z-index:1;
+    width:100%;
+    background: #4cb683;
+    box-shadow: 0 2px 4px 0 #00000090;
+  }
   .search-group-wrapper {
     display: inline-block;
     margin:12px;

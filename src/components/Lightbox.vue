@@ -29,6 +29,7 @@ export default {
 <style scoped lang="scss">
   .lightbox-layer{
     position: fixed;
+    z-index:9;
     top:0;
     width:100%;
     height: 100%;
