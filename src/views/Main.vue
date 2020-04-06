@@ -1,7 +1,7 @@
 <template>
   <div class="main-wrapper">
     <!-- navbar start  -->
-      <nav class="main-navbar-wrapper" :class="{'is-collapsed': currScrollTop > 180}">
+      <nav class="main-navbar-wrapper" :class="{'is-collapsed': currScrollTop > 90}">
         <div class="navbar-content">
           <div class="navbar-title">
             Hexschool 2020 鐵人賽文章搜尋器 ver {{ appVersion }}
@@ -11,7 +11,7 @@
     <!-- navbar end  -->
     <div class="main-content-wrapper">
       <!-- search filter start -->
-        <div class="search-wrapper" :class="{'is-fixed': currScrollTop > 30}">
+        <div class="search-wrapper" :class="{'is-collapsed': currScrollTop > 90}">
           <div class="search-function">
             <!-- keyword func start  -->
               <span class="search-group-wrapper">
@@ -22,7 +22,7 @@
             <!-- limit func start  -->
               <span class="search-group-wrapper has-label">
                 <label class="search-label" for="limitArticleCount"> 文章顯示筆數</label>
-                <input class="search-input" id="limitArticleCount" type="number" min="1" placeholder="欄位文章數" v-model="articleLimit">
+                <input class="search-input" id="limitArticleCount" type="number" min="3" placeholder="欄位文章數" v-model="articleLimit">
               </span>
             <!-- limit func end -->
             <!-- subscribe func start -->
@@ -31,13 +31,13 @@
                 <button
                   class="search-btn"
                   :class="{'is-active': !isSubScribeModeOpen}"
-                  @click="isSubScribeModeOpen = false">
+                  @click="smoothToTop(), isSubScribeModeOpen = false">
                   全部
                 </button>
                 <button
                   class="search-btn"
                   :class="{'is-active': isSubScribeModeOpen}"
-                  @click="isSubScribeModeOpen = true">
+                  @click="smoothToTop(), isSubScribeModeOpen = true">
                   收藏
                 </button>
               </span>
@@ -49,25 +49,25 @@
                   <button
                     class="search-btn"
                     :class="{'is-active': sort === 'ascendArticleCount'}"
-                    @click="sortByAscendArticleCount(), sort = 'ascendArticleCount'">
+                    @click="smoothToTop(), sortByAscendArticleCount(), sort = 'ascendArticleCount'">
                     發布文章多到少
                   </button>
                   <button
                     class="search-btn"
                     :class="{'is-active': sort === 'descendArticleCount'}"
-                    @click="sortByDescendArticleCount(), sort = 'descendArticleCount'">
+                    @click="smoothToTop(), sortByDescendArticleCount(), sort = 'descendArticleCount'">
                     發布文章少到多
                   </button>
                   <button
                     class="search-btn"
                     :class="{'is-active': sort === 'ascendDate'}"
-                    @click="sortByAscendDate(), sort = 'ascendDate'">
+                    @click="smoothToTop(), sortByAscendDate(), sort = 'ascendDate'">
                     更新日期遠到近
                   </button>
                   <button
                     class="search-btn"
                     :class="{'is-active': sort === 'descendDate'}"
-                    @click="sortByDescendDate(), sort = 'descendDate'">
+                    @click="smoothToTop(), sortByDescendDate(), sort = 'descendDate'">
                     更新日期近到遠
                   </button>
                 </div>
@@ -87,7 +87,7 @@
         <div class="list-wrapper" ref="list-wrapper">
           <template v-for="data in List">
             <Article
-              v-show="searchFilter(data)"
+              v-if="searchFilter(data)"
               :filter="keyword"
               :key="data.updateTime"
               :author="data.name"
@@ -284,12 +284,16 @@ export default {
       cat.top = '50%'
       cat.left = '50%'
       cat.transform = 'translate(-50%, -140%)'
+      cat.transition = '1s'
       cat.fontSize = '100px'
       chatbox.position = 'fixed'
       chatbox.top = '50%'
       chatbox.left = '50%'
-      chatbox.transform = 'translate(-50%, -50%)'
+      chatbox.transform = 'translate(-50%, -50%);'
       this.statusNotice = '感謝你，我已經被釋放了！'
+      setTimeout(function () {
+        chatbox.display = 'hidden'
+      }, 3000)
     },
     smoothToTop () {
       const TOP = document.documentElement.scrollTop || document.body.scrollTop
@@ -311,7 +315,7 @@ export default {
 <style scoped lang="scss">
 // section wrapper
 .main-wrapper {
-  padding-top: 48px;
+  padding-top: 164px;
 }
 .main-content-wrapper{
   width:100%;
@@ -370,16 +374,18 @@ export default {
 }
 
 .search-wrapper {
-  &.is-fixed {
-    position: fixed;
-    display:flex;
-    justify-content: center;
-    top:0;
-    left:0;
-    z-index:1;
-    width:100%;
-    background: #4cb683;
-    box-shadow: 0 2px 4px 0 #00000090;
+  position: fixed;
+  display:flex;
+  justify-content: center;
+  top:48px;
+  left:0;
+  z-index:1;
+  width:100%;
+  background: #4cb683;
+  box-shadow: 0 2px 4px 0 #00000090;
+  transition: 0.3s;
+  &.is-collapsed {
+    top: 0px;
   }
   .search-group-wrapper {
     display: inline-block;
