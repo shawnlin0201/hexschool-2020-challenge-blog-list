@@ -289,10 +289,10 @@ export default {
       chatbox.position = 'fixed'
       chatbox.top = '50%'
       chatbox.left = '50%'
-      chatbox.transform = 'translate(-50%, -50%);'
+      chatbox.transform = 'translate(-50%, -50%)'
       this.statusNotice = '感謝你，我已經被釋放了！'
       setTimeout(function () {
-        chatbox.display = 'hidden'
+        chatbox.display = 'none'
       }, 3000)
     },
     smoothToTop () {
