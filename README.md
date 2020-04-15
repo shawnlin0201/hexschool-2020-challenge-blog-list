@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://www.hexschool.com/2019/11/14/2019-11-14-w3Hexschool-2020-challenge/" target="_blank" rel="noopener noreferrer">
-    <img width="500" src="https://firebasestorage.googleapis.com/v0/b/hexschool-api.appspot.com/o/blog%2F2019%2F11%2Fw3HS%E9%90%B5%E4%BA%BA%E8%B3%BDbanner.png?alt=media&amp;token=3f0ef8fd-6285-47ac-a159-83ff3fb3972e" alt="Vue logo">
+    <img width="500" src="https://firebasestorage.googleapis.com/v0/b/hexschool-api.appspot.com/o/blog%2F2019%2F11%2Fw3HS%E9%90%B5%E4%BA%BA%E8%B3%BDbanner.png?alt=media&amp;token=3f0ef8fd-6285-47ac-a159-83ff3fb3972e" alt="hexschool-2020-challenge-blog-list">
   </a>
 </p>
 
