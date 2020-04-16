@@ -1,17 +1,21 @@
 <template>
   <div class="main-wrapper">
     <!-- navbar start  -->
-      <nav class="main-navbar-wrapper" :class="{'is-collapsed': currScrollTop > 90}">
+      <nav class="main-navbar-wrapper" :class="{'is-collapsed': currScrollTop > navbarCollapseTop}">
         <div class="navbar-content">
           <div class="navbar-title">
             Hexschool 2020 鐵人賽文章搜尋器 ver {{ appVersion }}
+          </div>
+          <div class="navbar-notice"  @click="$emit('showNotice')">
+            版本資訊
+            <i class="icon notice"></i>
           </div>
         </div>
       </nav>
     <!-- navbar end  -->
     <div class="main-content-wrapper">
       <!-- search filter start -->
-        <div class="search-wrapper" :class="{'is-collapsed': currScrollTop > 90}">
+        <div class="search-wrapper" :class="{'is-collapsed': currScrollTop > navbarCollapseTop}">
           <div class="search-function">
             <!-- keyword func start  -->
               <span class="search-group-wrapper">
@@ -138,6 +142,7 @@ export default {
   ],
   data () {
     return {
+      navbarCollapseTop: 300,
       List: mockListData,
       ListOrigin: '備份檔案（因目前 API、網路連線異常）',
       ListCount: 1,
@@ -347,6 +352,22 @@ export default {
     margin:0 auto;
     padding: 12px;
     box-sizing: border-box;
+    .navbar-notice {
+      border:2px solid white;
+      padding: 4px 8px;
+      border-radius: 4px;
+
+      cursor: pointer;
+      transition:0.8s;
+      &:hover {
+
+      }
+      .icon::before {
+        width:20px;
+        height:20px;
+        vertical-align: bottom;
+      }
+    }
   }
 }
 .status-wrapper {

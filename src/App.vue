@@ -2,12 +2,12 @@
   <div id="app-wrapper">
     <Main
     :appVersion='appVersion'
+    @showNotice="() => isLightBoxOpen = !isLightBoxOpen"
     />
-    <Lightbox :title="`${appVersion} 版本更新內容`" :isLightBoxOpen="isLightBoxOpen" @triggerLightboxOpen="() => isLightBoxOpen = false">
+    <Lightbox :title="`${appVersion} 版本更新內容`" :isLightBoxOpen="isLightBoxOpen" @closeLightbox="() => isLightBoxOpen = false">
       <template slot="content">
-        搜尋功能：搜尋功能置頂 (<a href="https://github.com/shawnlin0201/hexschool-2020-challenge-blog-list/issues/3" noopener>#3</a>)。
-        <br>
-        搜尋功能：調整搜尋邏輯。
+        正式版 Release！<br>
+        新增版本資訊按鈕。
       </template>
     </Lightbox>
   </div>
@@ -25,7 +25,7 @@ export default {
   },
   data () {
     return {
-      appVersion: '0.4.1',
+      appVersion: '1.0.0',
       isUpdated: false,
       isLightBoxOpen: false
     }

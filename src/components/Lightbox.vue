@@ -1,18 +1,20 @@
 <template>
-  <div class="lightbox-layer" v-if="isLightBoxOpen">
-    <div class="lightbox-wrapper">
-      <div class="lightbox-header">
-        {{ title }}
-        <div class="lightbox-close-btn" @click="$emit('triggerLightboxOpen')">
-          <i class="icon close"></i>
+  <transition name="fade">
+    <div class="lightbox-layer" v-if="isLightBoxOpen" @click="$emit('closeLightbox')">
+      <div class="lightbox-wrapper">
+        <div class="lightbox-header">
+          {{ title }}
+          <div class="lightbox-close-btn" @click="$emit('closeLightbox')">
+            <i class="icon close"></i>
+          </div>
+        </div>
+        <div class="lightbox-body">
+          <slot name="content">
+          </slot>
         </div>
       </div>
-      <div class="lightbox-body">
-        <slot name="content">
-        </slot>
-      </div>
     </div>
-  </div>
+  </transition>
 </template>
 
 <script>
@@ -27,6 +29,11 @@ export default {
 </script>
 
 <style scoped lang="scss">
+
+  .fade-enter, .fade-leave-to {
+    opacity: 0;
+  }
+
   .lightbox-layer{
     position: fixed;
     z-index:9;
@@ -39,6 +46,7 @@ export default {
     background:#0008;
     font-family: '微軟正黑體';
     font-weight: bold;
+    transition:0.3s;
     .lightbox-wrapper {
       padding:12px 14px;
       background:white;
