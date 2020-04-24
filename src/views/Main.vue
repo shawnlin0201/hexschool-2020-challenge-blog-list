@@ -6,9 +6,15 @@
           <div class="navbar-title">
             Hexschool 2020 鐵人賽文章搜尋器 ver {{ appVersion }}
           </div>
-          <div class="navbar-notice"  @click="$emit('showNotice')">
-            版本資訊
-            <i class="icon notice"></i>
+          <div class="navbar-notice">
+            <a class="navbar-btn" href="https://github.com/shawnlin0201/hexschool-2020-challenge-blog-list/issues" target="_blank">
+              Github
+              <i class="icon github"></i>
+            </a>
+            <div class="navbar-btn" @click="$emit('showNotice')">
+              版本資訊
+              <i class="icon notice"></i>
+            </div>
           </div>
         </div>
       </nav>
@@ -353,19 +359,22 @@ export default {
     padding: 12px;
     box-sizing: border-box;
     .navbar-notice {
-      border:2px solid white;
-      padding: 4px 8px;
-      border-radius: 4px;
-
-      cursor: pointer;
-      transition:0.8s;
-      &:hover {
-
-      }
-      .icon::before {
-        width:20px;
-        height:20px;
-        vertical-align: bottom;
+      display:flex;
+      .navbar-btn {
+        margin-right:12px;
+        border:2px solid white;
+        padding: 4px 8px;
+        border-radius: 4px;
+        cursor: pointer;
+        transition:0.3s;
+        &:hover {
+          background:#4cb683;
+        }
+        .icon::before {
+          width:20px;
+          height:20px;
+          vertical-align: bottom;
+        }
       }
     }
   }
