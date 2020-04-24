@@ -10,7 +10,7 @@ This repo 此專案目的在於搜尋 [六角學院 鼠年全馬鐵人挑戰](ht
 
 專案連結：[Hexschool 2020 鐵人賽文章搜尋器](https://shawnlin0201.github.io/hexschool-2020-challenge-blog-list/)
 
-QRCode:
+或者你也可以使用手機試試 QRcode！<br>
 <img style="" width="120" src="https://github.com/shawnlin0201/hexschool-2020-challenge-blog-list/blob/master/src/assets/images/appQRcode.png?raw=true" alt="repo-qrcode">
 
 ## Question & Issue
