@@ -8,11 +8,11 @@
           </div>
           <div class="navbar-notice">
             <a class="navbar-btn" href="https://github.com/shawnlin0201/hexschool-2020-challenge-blog-list/issues" target="_blank">
-              Github
+              <span class="btn-text">Github</span>
               <i class="icon github"></i>
             </a>
             <div class="navbar-btn" @click="$emit('showNotice')">
-              版本資訊
+              <span class="btn-text">版本資訊</span>
               <i class="icon notice"></i>
             </div>
           </div>
@@ -24,19 +24,19 @@
         <div class="search-wrapper" :class="{'is-collapsed': currScrollTop > navbarCollapseTop}">
           <div class="search-function">
             <!-- keyword func start  -->
-              <span class="search-group-wrapper">
+              <span class="search-group-wrapper keyword-group">
                 <input class="search-input" type="text" placeholder="搜尋文章關鍵字" v-model="keyword" @input="sort = ''">
                 <div class="search-input-autoComplete"></div>
               </span>
             <!-- keyword func end  -->
             <!-- limit func start  -->
-              <span class="search-group-wrapper has-label">
+              <span class="search-group-wrapper has-label limit-group">
                 <label class="search-label" for="limitArticleCount"> 文章顯示筆數</label>
                 <input class="search-input" id="limitArticleCount" type="number" min="3" placeholder="欄位文章數" v-model="articleLimit">
               </span>
             <!-- limit func end -->
             <!-- subscribe func start -->
-              <span class="search-group-wrapper has-label">
+              <span class="search-group-wrapper has-label list-group">
                 <label class="search-label" for="limitArticleCount"> 列表</label>
                 <button
                   class="search-btn"
@@ -53,7 +53,7 @@
               </span>
             <!-- subscribe func end -->
             <!-- sort func start -->
-              <span class="search-group-wrapper has-label">
+              <span class="search-group-wrapper has-label sort-group">
                 <label class="search-label" for="limitArticleCount"> 排序</label>
                 <div class="search-select">
                   <button
@@ -324,6 +324,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
+
 // section wrapper
 .main-wrapper {
   padding-top: 164px;
@@ -353,7 +354,8 @@ export default {
     display:flex;
     justify-content: space-between;
     align-items: center;
-    width:1200px;
+    width:100%;
+    max-width:1200px;
     height:48px;
     margin:0 auto;
     padding: 12px;
@@ -399,7 +401,7 @@ export default {
 }
 .list-wrapper {
   display:flex;
-  justify-content: flex-start;
+  justify-content: center;
   flex-wrap: wrap;
 }
 
@@ -423,7 +425,6 @@ export default {
     overflow: hidden;
     vertical-align:bottom;
     &.has-label {
-      background:#103523;
       border-radius: 2px;
       box-shadow: 0 2px 4px 0 #00000090;
       .search-input {
@@ -440,11 +441,14 @@ export default {
         }
       }
       .search-label {
+        display: inline-block;
         font-family: '微軟正黑體';
         font-weight: bold;
         font-size:15px;
         padding:0 8px;
         color:white;
+        background:#103523;
+        padding: 6px 8px;
       }
       .search-select {
         display:inline-block;
@@ -541,6 +545,7 @@ export default {
     font-size:15px;
     color: #fff;
     text-align:center;
+    box-sizing: border-box;
   }
   a {
     text-decoration: underline;
@@ -561,6 +566,42 @@ export default {
     transition:1s;
     &.is-active {
       right:5%;
+    }
+  }
+}
+
+@media (max-width: 900px) {
+  .navbar-btn {
+    .btn-text{
+      display: none;
+    }
+  }
+  .status-wrapper {
+    display:none;
+  }
+}
+
+@media (max-width: 640px) {
+  .main-wrapper {
+    padding-top:160px;
+  }
+  .main-navbar-wrapper{
+    .navbar-content {
+      display: flex;
+      flex-direction: column;
+      .navbar-notice {
+        display: none;
+      }
+    }
+  }
+  .search-wrapper {
+    .search-group-wrapper {
+      &.keyword-group {
+        display: block;
+      }
+      &.sort-group {
+        display: none;
+      }
     }
   }
 }
