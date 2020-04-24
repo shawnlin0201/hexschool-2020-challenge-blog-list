@@ -353,7 +353,8 @@ export default {
     display:flex;
     justify-content: space-between;
     align-items: center;
-    width:1200px;
+    width:100%;
+    max-width:1200px;
     height:48px;
     margin:0 auto;
     padding: 12px;
@@ -541,6 +542,7 @@ export default {
     font-size:15px;
     color: #fff;
     text-align:center;
+    box-sizing: border-box;
   }
   a {
     text-decoration: underline;
