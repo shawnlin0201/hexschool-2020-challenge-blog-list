@@ -6,7 +6,7 @@
     />
     <Lightbox :title="`${appVersion} 版本更新內容`" :isLightBoxOpen="isLightBoxOpen" @closeLightbox="() => isLightBoxOpen = false">
       <template slot="content">
-        新增 Github repo 按鈕。
+        新增 Mobile 版型（AWD)
       </template>
     </Lightbox>
   </div>
@@ -24,7 +24,7 @@ export default {
   },
   data () {
     return {
-      appVersion: '1.0.1',
+      appVersion: '1.0.2',
       isLightBoxOpen: false
     }
   },
