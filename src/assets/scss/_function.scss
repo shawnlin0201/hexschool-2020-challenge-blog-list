@@ -1,0 +1,3 @@
+@function rem($targetFontPx, $rootFontSize: 16px){
+    @return ( $targetFontPx / $rootFontSize ) + 0rem;
+}
