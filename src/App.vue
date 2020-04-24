@@ -6,8 +6,7 @@
     />
     <Lightbox :title="`${appVersion} 版本更新內容`" :isLightBoxOpen="isLightBoxOpen" @closeLightbox="() => isLightBoxOpen = false">
       <template slot="content">
-        正式版 Release！<br>
-        新增版本資訊按鈕。
+        新增 Github repo 按鈕。
       </template>
     </Lightbox>
   </div>
@@ -25,19 +24,21 @@ export default {
   },
   data () {
     return {
-      appVersion: '1.0.0',
-      isUpdated: false,
+      appVersion: '1.0.1',
       isLightBoxOpen: false
     }
   },
   mounted () {
-    const localVersion = this.getAppVersion()
-    if (localVersion !== this.appVersion) {
-      this.uploadAppVersion()
-    }
+    this.checkAppVersion()
   },
   methods: {
-    getAppVersion () {
+    checkAppVersion () {
+      const clientVersion = this.getClientAppVersion()
+      if (clientVersion !== this.appVersion) {
+        this.uploadAppVersion()
+      }
+    },
+    getClientAppVersion () {
       return localStorage.getItem('HexSchoolVersion') || ''
     },
     uploadAppVersion () {
