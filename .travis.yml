@@ -1,0 +1,13 @@
+language: node_js
+node_js:
+  - 12
+branchs:
+  only:
+    - develop
+cache:
+  directories:
+    - node_modules
+install:
+  - yarn install
+scripts:
+  - yarn build
