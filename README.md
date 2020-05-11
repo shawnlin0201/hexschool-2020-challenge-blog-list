@@ -6,6 +6,8 @@
 
 <h1 align="center">Hexschool 2020 鐵人賽文章搜尋器</h1>
 
+[![Build Status](https://travis-ci.org/shawnlin0201/hexschool-2020-challenge-blog-list.svg?branch=develop)](https://travis-ci.org/shawnlin0201/hexschool-2020-challenge-blog-list)
+
 This repo 此專案目的在於搜尋 [六角學院 鼠年全馬鐵人挑戰](https://www.hexschool.com/2019/11/14/2019-11-14-w3Hexschool-2020-challenge/) 所參賽之文章，並基於六角學院釋出的 [API](https://github.com/hexschool/w3hexschool-API) 所開發的搜尋器。
 
 專案連結：[Hexschool 2020 鐵人賽文章搜尋器](https://shawnlin0201.github.io/hexschool-2020-challenge-blog-list/)
