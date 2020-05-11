@@ -24,6 +24,6 @@ Version change detail are documented in the [release page.](https://github.com/s
 
 ## License
 
-[MIT](https://github.com/shawnlin0201/Lightness.js/blob/master/LICENSE)
+[MIT](https://github.com/shawnlin0201/hexschool-2020-challenge-blog-list/blob/master/LICENSE)
 
 Copyright (c) 2020-present, Shawn Lin
